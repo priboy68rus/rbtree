@@ -5,13 +5,23 @@ template <typename Key> class RBTree {
 
 	private:
 		class RBNode {
-		private:
+		public:
+			enum Color {RED = 0, BLACK = 1};
 			Key key;
 			Color color;
 			RBNode * left, * right, * parent;
-		public:
-			enum Color {RED = 0, BLACK = 1};
+			RBNode(Key key);
 		};
+
+		Node * root;
+		void destroyTree(root);
+
+
+	public:
+		RBTree();
+		~RBTree();
+		void insert(Key key);
+		void remove(Key key);
 
 };
 
