@@ -1,6 +1,10 @@
 #ifndef _RBTREE
 #define _RBTREE
 
+#include "stdio.h"
+#include <iostream>
+
+
 template <typename Key> class RBTree {
 
 	private:
@@ -13,16 +17,18 @@ template <typename Key> class RBTree {
 			RBNode(Key key);
 		};
 
-		Node * root;
-		void destroyTree(root);
+		RBNode * root;
+		void destroyTree(RBNode * root);
 
 
 	public:
-		RBTree();
+		RBTree() { };
 		~RBTree();
 		void insert(Key key);
 		void remove(Key key);
 
 };
 
-#endif
+
+
+#endif /* _RBTREE */
