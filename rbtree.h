@@ -22,13 +22,33 @@ template <typename Key> class RBTree {
 
 
 	public:
-		RBTree() { };
+		RBTree() {};
 		~RBTree();
 		void insert(Key key);
 		void remove(Key key);
 
 };
 
+template <typename Key> RBTree<Key>::RBNode::RBNode(Key key) {
+	this->key = key;
+	this->color = RED;
+	this->left = NULL;
+	this->right = NULL;
+	this->parent = NULL;
+}
 
+template <typename Key> RBTree<Key>::~RBTree() {
+	destroyTree(root);
+}
+
+template <typename Key> void RBTree<Key>::destroyTree(RBTree<Key>::RBNode * root) {
+	if (root->left != NULL) destroyTree(root->left);
+	if (root->right != NULL) destroyTree(root->right);
+	if (root != NULL) delete root;
+}
+
+template <typename Key> void RBTree<Key>::insert(Key key) {
+	
+}
 
 #endif /* _RBTREE */
