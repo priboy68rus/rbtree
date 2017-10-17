@@ -62,11 +62,25 @@ template <typename Key> bool RBTree<Key>::isLeaf(RBTree<Key>::RBNode * n) {
 
 
 template <typename Key> void RBTree<Key>::insertRecursive(RBTree<Key>::RBNode * n) {
-	// if (root == NULL) {
-	// 	root = n;
-	// 	return;
-	// }
-	// RBNode * r = root;
+	if (root == NULL) {
+		root = n;
+		n->parent = NULL;
+		return;
+	}
+	RBNode * r = root;
+	while (!isLeaf(r)) {
+		if (n->key < r->key) {
+			r = r->left;
+		} else {
+			r = r->right;
+		}
+	}
+
+	if (r->parent->left == r) {
+		r->parent->left = n;
+	} else {
+		r->parent->right = n;
+	}
 }
 
 template <typename Key> void RBTree<Key>::insert(Key key) {
