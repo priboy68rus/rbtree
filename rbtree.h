@@ -19,16 +19,17 @@ template <typename Key> class RBTree {
 
 		RBNode * root;
 		void destroyTree(RBNode * root);
-		// void rotateLeft(RBNode * n);
+		void rotateLeft(RBNode * n);
 		void rotateRight(RBNode * n);
+		void insertRecursive(RBNode * n);
+		bool isLeaf(RBNode * n);
 
 
 	public:
-		RBTree() {};
+		RBTree() { root = NULL; };
 		~RBTree();
 		void insert(Key key);
 		void remove(Key key);
-		void rotateLeft(RBNode * n);
 
 
 };
@@ -42,17 +43,34 @@ template <typename Key> RBTree<Key>::RBNode::RBNode(Key key) {
 }
 
 template <typename Key> RBTree<Key>::~RBTree() {
-	destroyTree(root);
+	destroyTree(this->root);
 }
 
 template <typename Key> void RBTree<Key>::destroyTree(RBTree<Key>::RBNode * root) {
+	if (root == NULL) return;
 	if (root->left != NULL) destroyTree(root->left);
 	if (root->right != NULL) destroyTree(root->right);
 	if (root != NULL) delete root;
 }
 
+
+template <typename Key> bool RBTree<Key>::isLeaf(RBTree<Key>::RBNode * n) {
+	if (n == NULL) return false;
+	if (n->left != NULL && n->right != NULL) return true;
+	return false;
+}
+
+
+template <typename Key> void RBTree<Key>::insertRecursive(RBTree<Key>::RBNode * n) {
+	// if (root == NULL) {
+	// 	root = n;
+	// 	return;
+	// }
+	// RBNode * r = root;
+}
+
 template <typename Key> void RBTree<Key>::insert(Key key) {
-	this->root = new RBNode(key);
+	// RBNode * n = new RBNode(key);
 }
 
 template <typename Key> void RBTree<Key>::rotateLeft(RBTree<Key>::RBNode * n) {
