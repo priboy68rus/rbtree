@@ -34,6 +34,13 @@ template <typename Key> class RBTree {
 
 };
 
+template <typename Key> RBTree<Key>::RBNode::RBNode() {
+	this->color = BLACK;
+	this->left = NULL;
+	this->right = NULL;
+	this->parent = NULL;
+}
+
 template <typename Key> RBTree<Key>::RBNode::RBNode(Key key) {
 	this->key = key;
 	this->color = RED;
@@ -81,10 +88,16 @@ template <typename Key> void RBTree<Key>::insertRecursive(RBTree<Key>::RBNode * 
 	} else {
 		r->parent->right = n;
 	}
+
+	delete r;
 }
 
 template <typename Key> void RBTree<Key>::insert(Key key) {
-	// RBNode * n = new RBNode(key);
+	RBNode * n = new RBNode(key);
+
+	// insertRecursive(n);
+	// RBNode * a = new RBNode();
+
 }
 
 template <typename Key> void RBTree<Key>::rotateLeft(RBTree<Key>::RBNode * n) {
