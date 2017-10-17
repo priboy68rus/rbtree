@@ -24,6 +24,7 @@ template <typename Key> class RBTree {
 		void insertRecursive(RBNode * n);
 		bool isLeaf(RBNode * n);
 		void createLeaves(RBNode * n);
+		void repairTree(RBNode * n);
 
 
 	public:
@@ -102,12 +103,35 @@ template <typename Key> void RBTree<Key>::insertRecursive(RBTree<Key>::RBNode * 
 	delete r;
 }
 
+template <typename Key> void RBTree<Key>::repairTree(RBTree<Key>::RBNode * n) {
+	// Case 1
+	if (n->parent == NULL) {
+		n->color = BLACK;
+		return;
+	}
+
+	// Case 2
+	if (n->parent->color == BLACK) {
+		return;
+	}
+
+	// Case 3
+}
+
 template <typename Key> void RBTree<Key>::insert(Key key) {
 	RBNode * n = new RBNode(key);
 
 	insertRecursive(n);
 
 	createLeaves(n);
+
+	repairTree(n);
+
+	RBNode * r = n;
+	while (r->parent != NULL) {
+		r = r->parent;
+	}
+	this->root = r;
 
 }
 
