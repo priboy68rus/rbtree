@@ -12,6 +12,9 @@ int main() {
 	for (int i = 0; i < 6; i++) {
 		t->insert(a[i]);
 	}
+
+	// RBIterator
+
 	delete t;
 	return 0;
 }

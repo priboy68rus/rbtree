@@ -7,7 +7,7 @@
 
 
 template <typename Key> class RBTree {
-
+	template <typename K> class RBIterator;
 	private:
 		enum Color {RED = 0, BLACK = 1};
 		class RBNode {
@@ -36,8 +36,22 @@ template <typename Key> class RBTree {
 		~RBTree();
 		void insert(Key key);
 		void remove(Key key);
+		RBIterator<Key> begin();
+		RBIterator<Key> end();
 
+};
 
+template <typename K> class RBIterator : public std::iterator<std::input_iterator_tag, K> {
+	template <typename Key> friend class RBTree;
+	private:
+		typename RBTree<K>::RBNode * n;
+	public:
+		RBIterator(const RBIterator & other);
+		RBIterator(typename RBTree<K>::RBNode * n);
+		bool operator!=(RBIterator & other);
+		bool operator==(RBIterator & other);
+		typename RBIterator::reference operator*();
+		RBIterator& operator++();
 };
 
 template <typename Key> RBTree<Key>::RBNode::RBNode() {
@@ -224,20 +238,33 @@ template <typename Key> void RBTree<Key>::rotateRight(RBTree<Key>::RBNode * n) {
 	pivot->right = n;
 }
 
+template <typename Key> RBTree<Key>::RBIterator<Key> RBTree<Key>::begin() {
+	RBNode * r = root;
+	while (!r->left->isLeaf) {
+		r = r->left;
+	}
+	return RBIterator<Key>(r);
+}
+
+template <typename Key> RBTree<Key>::RBIterator<Key> RBTree<Key>::end() {
+	RBNode * r = root;
+	while (!r->right->isLeaf) {
+		r = r->right;
+	}
+	return RBIterator<Key>(r);
+}
+
 // ======================
 //	Iterator for RBTree
 // ======================
 
-template <typename K> class RBIterator : public std::iterator<std::input_iterator_tag, K> {
-	template <typename Key> friend class RBTree;
-	private:
-		typename RBTree<K>::RBNode * n;
-	public:
-		bool operator!=(RBIterator & other);
-		bool operator==(RBIterator & other);
-		typename RBIterator::reference operator*();
-		RBIterator& operator++();
-};
+template <typename K> RBIterator<K>::RBIterator(const RBIterator & other) {
+	n = other.n;
+}
+
+template <typename K> RBIterator<K>::RBIterator(typename RBTree<K>::RBNode * n) {
+	this->n = n;
+}
 
 template <typename K> bool RBIterator<K>::operator!=(RBIterator & other) {
 	return n != other.n;
