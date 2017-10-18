@@ -8,10 +8,10 @@ using namespace std;
 
 int main() {
 	RBTree<int> * t = new RBTree<int>();
-	t->insert(0);
-	t->insert(1);
-	t->insert(2);
-	printf("  %d  \n", t->root->left->key);
+	int a[] = {1, 2, 3, 0, 5, 4};
+	for (int i = 0; i < 6; i++) {
+		t->insert(a[i]);
+	}
 	delete t;
 	return 0;
 }

@@ -3,11 +3,12 @@
 
 #include "stdio.h"
 #include <iostream>
+#include <iterator>
 
 
 template <typename Key> class RBTree {
 
-	public:
+	private:
 		enum Color {RED = 0, BLACK = 1};
 		class RBNode {
 		public:
@@ -222,5 +223,50 @@ template <typename Key> void RBTree<Key>::rotateRight(RBTree<Key>::RBNode * n) {
 	n->parent = pivot;
 	pivot->right = n;
 }
+
+// ======================
+//	Iterator for RBTree
+// ======================
+
+template <typename K> class RBIterator : public std::iterator<std::input_iterator_tag, K> {
+	template <typename Key> friend class RBTree;
+	private:
+		typename RBTree<K>::RBNode * n;
+	public:
+		bool operator!=(RBIterator & other);
+		bool operator==(RBIterator & other);
+		typename RBIterator::reference operator*();
+		RBIterator& operator++();
+};
+
+template <typename K> bool RBIterator<K>::operator!=(RBIterator & other) {
+	return n != other.n;
+}
+
+template <typename K> bool RBIterator<K>::operator==(RBIterator & other) {
+	return n == other.n;
+}
+
+template <typename K> typename RBIterator<K>::reference RBIterator<K>::operator*() {
+	return n->key;
+}
+
+template <typename K> RBIterator<K> &RBIterator<K>::operator++() {
+	typename RBTree<K>::RBNode * r = n, * p = n->parent;
+	if (r->right->isLeaf) {
+		while (p->left != n) {
+			p = p->parent;
+			n = p;
+		}
+		return p->key;
+	} else {
+		r = r->right;
+		while (!r->left->isLeaf) {
+			r = r->left;
+		}
+		return r->key;
+	}
+}
+
 
 #endif /* _RBTREE */
