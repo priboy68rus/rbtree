@@ -8,13 +8,14 @@
 template <typename Key> class RBTree {
 
 	private:
+		enum Color {RED = 0, BLACK = 1};
 		class RBNode {
 		public:
-			enum Color {RED = 0, BLACK = 1};
 			Key key;
 			Color color;
 			RBNode * left, * right, * parent;
 			RBNode(Key key);
+			RBNode();
 		};
 
 		RBNode * root;
@@ -25,6 +26,8 @@ template <typename Key> class RBTree {
 		bool isLeaf(RBNode * n);
 		void createLeaves(RBNode * n);
 		void repairTree(RBNode * n);
+		RBNode * getUncle(RBNode * n);
+
 
 
 	public:
@@ -69,7 +72,7 @@ template <typename Key> bool RBTree<Key>::isLeaf(RBTree<Key>::RBNode * n) {
 	return false;
 }
 
-template <typename Key> bool RBTree<Key>::createLeaves(RBTree<Key>::RBNode * n) {
+template <typename Key> void RBTree<Key>::createLeaves(RBTree<Key>::RBNode * n) {
 	RBNode * a = new RBNode();
 	RBNode * b = new RBNode();
 	a->parent = n;
@@ -116,6 +119,17 @@ template <typename Key> void RBTree<Key>::repairTree(RBTree<Key>::RBNode * n) {
 	}
 
 	// Case 3
+}
+
+template <typename Key> typename RBTree<Key>::RBNode * RBTree<Key>::getUncle(RBTree<Key>::RBNode * n) {
+	if (n == NULL) return NULL;
+	if (n->parent == NULL) return NULL;
+	if (n->parent->parent == NULL) return NULL;
+	if (n->parent == n->parent->parent->left) {
+		return n->parent->parent->right;
+	} else {
+		return n->parent->parent->left;
+	}
 }
 
 template <typename Key> void RBTree<Key>::insert(Key key) {
