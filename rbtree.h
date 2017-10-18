@@ -107,19 +107,55 @@ template <typename Key> void RBTree<Key>::insertRecursive(RBTree<Key>::RBNode * 
 }
 
 template <typename Key> void RBTree<Key>::repairTree(RBTree<Key>::RBNode * n) {
+	RBNode * p = n->parent;
+	RBNode * g = p->parent;
+	RBNode * u = getUncle(n);
+
 	// Case 1
-	if (n->parent == NULL) {
+	if (p == NULL) {
 		n->color = BLACK;
 		return;
 	}
 
 	// Case 2
-	if (n->parent->color == BLACK) {
+	if (p->color == BLACK)
+		return;
+
+	// Suggesting that grandparent exists
+	
+	if (g == NULL)
+		return;
+
+	// Case 3
+	if (u->color == RED) {
+		p->color = BLACK;
+		u->color = BLACK;
+		g->color = RED;
+		repairTree(g);
 		return;
 	}
 
-	// Case 3
+	// Case 4
+	if (n == g->left->right) {
+		rotateLeft(p);
+		n = n->left;
+	} else if (n == g->right->left) {
+		rotateRight(p);
+		n = n->right;
+	}
+
+	p = n->parent;
+	g = p->parent;
+	if (n == p->left) {
+		rotateRight(g);
+	} else {
+		rotateLeft(g);
+	}
+	p->color = BLACK;
+	g->color = RED;
+
 }
+
 
 template <typename Key> typename RBTree<Key>::RBNode * RBTree<Key>::getUncle(RBTree<Key>::RBNode * n) {
 	if (n == NULL) return NULL;
