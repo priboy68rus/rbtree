@@ -7,13 +7,14 @@
 
 template <typename Key> class RBTree {
 
-	private:
+	public:
 		enum Color {RED = 0, BLACK = 1};
 		class RBNode {
 		public:
 			Key key;
 			Color color;
 			RBNode * left, * right, * parent;
+			bool isLeaf;
 			RBNode(Key key);
 			RBNode();
 		};
@@ -23,7 +24,7 @@ template <typename Key> class RBTree {
 		void rotateLeft(RBNode * n);
 		void rotateRight(RBNode * n);
 		void insertRecursive(RBNode * n);
-		bool isLeaf(RBNode * n);
+		// bool isLeaf(RBNode * n);
 		void createLeaves(RBNode * n);
 		void repairTree(RBNode * n);
 		RBNode * getUncle(RBNode * n);
@@ -35,6 +36,7 @@ template <typename Key> class RBTree {
 		~RBTree();
 		void insert(Key key);
 		void remove(Key key);
+		// void printLayers();
 
 
 };
@@ -44,6 +46,7 @@ template <typename Key> RBTree<Key>::RBNode::RBNode() {
 	this->left = NULL;
 	this->right = NULL;
 	this->parent = NULL;
+	this->isLeaf = true;
 }
 
 template <typename Key> RBTree<Key>::RBNode::RBNode(Key key) {
@@ -52,6 +55,7 @@ template <typename Key> RBTree<Key>::RBNode::RBNode(Key key) {
 	this->left = NULL;
 	this->right = NULL;
 	this->parent = NULL;
+	this->isLeaf = false;
 }
 
 template <typename Key> RBTree<Key>::~RBTree() {
@@ -66,11 +70,11 @@ template <typename Key> void RBTree<Key>::destroyTree(RBTree<Key>::RBNode * root
 }
 
 
-template <typename Key> bool RBTree<Key>::isLeaf(RBTree<Key>::RBNode * n) {
-	if (n == NULL) return false;
-	if (n->left != NULL && n->right != NULL) return true;
-	return false;
-}
+// template <typename Key> bool RBTree<Key>::isLeaf(RBTree<Key>::RBNode * n) {
+// 	if (n == NULL) return false;
+// 	if (n->left == NULL && n->right == NULL) return true;
+// 	return false;
+// }
 
 template <typename Key> void RBTree<Key>::createLeaves(RBTree<Key>::RBNode * n) {
 	RBNode * a = new RBNode();
@@ -89,7 +93,7 @@ template <typename Key> void RBTree<Key>::insertRecursive(RBTree<Key>::RBNode * 
 		return;
 	}
 	RBNode * r = root;
-	while (!isLeaf(r)) {
+	while (!r->isLeaf) {
 		if (n->key < r->key) {
 			r = r->left;
 		} else {
@@ -107,22 +111,23 @@ template <typename Key> void RBTree<Key>::insertRecursive(RBTree<Key>::RBNode * 
 }
 
 template <typename Key> void RBTree<Key>::repairTree(RBTree<Key>::RBNode * n) {
-	RBNode * p = n->parent;
-	RBNode * g = p->parent;
-	RBNode * u = getUncle(n);
+	RBNode * p, *g, *u;
 
 	// Case 1
-	if (p == NULL) {
+	if (n->parent == NULL) {
 		n->color = BLACK;
 		return;
 	}
+
+	p = n->parent;
 
 	// Case 2
 	if (p->color == BLACK)
 		return;
 
 	// Suggesting that grandparent exists
-	
+	g = p->parent;
+	u = getUncle(n);
 	if (g == NULL)
 		return;
 
