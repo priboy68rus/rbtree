@@ -3,3 +3,5 @@ main
 CMake*
 cmake*
 .idea
+main.d*
+main.g*
