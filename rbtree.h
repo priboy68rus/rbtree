@@ -6,8 +6,27 @@
 #include <iterator>
 
 
+// template <typename K> class RBIterator : public std::iterator<std::input_iterator_tag, K>;
+
+template <typename Key> class RBTree;
+
+
+template <typename K> class RBIterator : public std::iterator<std::input_iterator_tag, K> {
+	template <typename Key> friend class RBTree;
+	private:
+		typename RBTree<K>::RBNode * n;
+	public:
+		RBIterator(const RBIterator & other);
+		RBIterator(typename RBTree<K>::RBNode * n);
+		bool operator!=(RBIterator const& other) const;
+		bool operator==(RBIterator const& other) const;
+		typename RBIterator::reference operator*() const;
+		RBIterator& operator++();
+};
+
+
 template <typename Key> class RBTree {
-	template <typename K> class RBIterator;
+	template <typename K> friend class RBIterator;
 	private:
 		enum Color {RED = 0, BLACK = 1};
 		class RBNode {
@@ -36,22 +55,9 @@ template <typename Key> class RBTree {
 		~RBTree();
 		void insert(Key key);
 		void remove(Key key);
-		RBIterator<Key> begin();
-		RBIterator<Key> end();
+		RBIterator<Key> begin() const;
+		RBIterator<Key> end() const;
 
-};
-
-template <typename K> class RBIterator : public std::iterator<std::input_iterator_tag, K> {
-	template <typename Key> friend class RBTree;
-	private:
-		typename RBTree<K>::RBNode * n;
-	public:
-		RBIterator(const RBIterator & other);
-		RBIterator(typename RBTree<K>::RBNode * n);
-		bool operator!=(RBIterator & other);
-		bool operator==(RBIterator & other);
-		typename RBIterator::reference operator*();
-		RBIterator& operator++();
 };
 
 template <typename Key> RBTree<Key>::RBNode::RBNode() {
@@ -238,7 +244,7 @@ template <typename Key> void RBTree<Key>::rotateRight(RBTree<Key>::RBNode * n) {
 	pivot->right = n;
 }
 
-template <typename Key> RBTree<Key>::RBIterator<Key> RBTree<Key>::begin() {
+template <typename Key> RBIterator<Key> RBTree<Key>::begin() const {
 	RBNode * r = root;
 	while (!r->left->isLeaf) {
 		r = r->left;
@@ -246,7 +252,7 @@ template <typename Key> RBTree<Key>::RBIterator<Key> RBTree<Key>::begin() {
 	return RBIterator<Key>(r);
 }
 
-template <typename Key> RBTree<Key>::RBIterator<Key> RBTree<Key>::end() {
+template <typename Key> RBIterator<Key> RBTree<Key>::end() const {
 	RBNode * r = root;
 	while (!r->right->isLeaf) {
 		r = r->right;
@@ -266,33 +272,34 @@ template <typename K> RBIterator<K>::RBIterator(typename RBTree<K>::RBNode * n) 
 	this->n = n;
 }
 
-template <typename K> bool RBIterator<K>::operator!=(RBIterator & other) {
+template <typename K> bool RBIterator<K>::operator!=(RBIterator const& other) const {
 	return n != other.n;
 }
 
-template <typename K> bool RBIterator<K>::operator==(RBIterator & other) {
+template <typename K> bool RBIterator<K>::operator==(RBIterator const& other) const {
 	return n == other.n;
 }
 
-template <typename K> typename RBIterator<K>::reference RBIterator<K>::operator*() {
+template <typename K> typename RBIterator<K>::reference RBIterator<K>::operator*() const{
 	return n->key;
 }
 
-template <typename K> RBIterator<K> &RBIterator<K>::operator++() {
+template <typename K> RBIterator<K> & RBIterator<K>::operator++() {
 	typename RBTree<K>::RBNode * r = n, * p = n->parent;
 	if (r->right->isLeaf) {
 		while (p->left != n) {
 			p = p->parent;
 			n = p;
 		}
-		return p->key;
+		n = p;
 	} else {
 		r = r->right;
 		while (!r->left->isLeaf) {
 			r = r->left;
 		}
-		return r->key;
+		n = r;
 	}
+	return *this;
 }
 
 
