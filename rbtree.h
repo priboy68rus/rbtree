@@ -24,7 +24,6 @@ template <typename Key> class RBTree {
 		void rotateLeft(RBNode * n);
 		void rotateRight(RBNode * n);
 		void insertRecursive(RBNode * n);
-		// bool isLeaf(RBNode * n);
 		void createLeaves(RBNode * n);
 		void repairTree(RBNode * n);
 		RBNode * getUncle(RBNode * n);
@@ -36,7 +35,6 @@ template <typename Key> class RBTree {
 		~RBTree();
 		void insert(Key key);
 		void remove(Key key);
-		// void printLayers();
 
 
 };
@@ -70,12 +68,6 @@ template <typename Key> void RBTree<Key>::destroyTree(RBTree<Key>::RBNode * root
 }
 
 
-// template <typename Key> bool RBTree<Key>::isLeaf(RBTree<Key>::RBNode * n) {
-// 	if (n == NULL) return false;
-// 	if (n->left == NULL && n->right == NULL) return true;
-// 	return false;
-// }
-
 template <typename Key> void RBTree<Key>::createLeaves(RBTree<Key>::RBNode * n) {
 	RBNode * a = new RBNode();
 	RBNode * b = new RBNode();
@@ -106,6 +98,7 @@ template <typename Key> void RBTree<Key>::insertRecursive(RBTree<Key>::RBNode * 
 	} else {
 		r->parent->right = n;
 	}
+	n->parent = r->parent;
 
 	delete r;
 }
