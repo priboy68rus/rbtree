@@ -27,7 +27,7 @@ template <typename K> class RBIterator : public std::iterator<std::input_iterato
 
 template <typename Key> class RBTree {
 	template <typename K> friend class RBIterator;
-	private:
+	public:
 		enum Color {RED = 0, BLACK = 1};
 		class RBNode {
 		public:
@@ -288,8 +288,8 @@ template <typename K> RBIterator<K> & RBIterator<K>::operator++() {
 	typename RBTree<K>::RBNode * r = n, * p = n->parent;
 	if (r->right->isLeaf) {
 		while (p->left != n) {
-			p = p->parent;
 			n = p;
+			p = p->parent;
 		}
 		n = p;
 	} else {
